@@ -1,0 +1,22 @@
+@Metadata.layer: #CORE
+//annotate entity entity_name
+//    with 
+//{
+//    element_name;
+//    
+//}
+@UI: {
+  headerInfo: {
+    typeName: 'Business Partner',
+    typeNamePlural: 'Business Partners'
+  }
+}
+annotate view Z_C_BusinessPartner with
+{
+  @UI: {
+            lineItem: [{ position: 10, type: #STANDARD, qualifier: 'DefaultList' }],
+            selectionField: [{ position: 10 }],
+            identification: [{ position: 10 }]
+            }
+  BusinessPartner;
+}
