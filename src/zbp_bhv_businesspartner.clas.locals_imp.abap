@@ -354,96 +354,93 @@ CLASS lhc_Z_I_BusinessPartner IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD rba_Address.
-*    DATA:
-*      lv_businesspartner TYPE bu_partner,
-*      lt_businesspartner TYPE TABLE OF bapibus1006_head,
-*      lt_address         TYPE TABLE OF bapibus1006_address,
-*
-*      lt_return          TYPE bapiret2_t
-*      .
-*    LOOP AT keys_rba ASSIGNING FIELD-SYMBOL(<businesspartner_rba>) GROUP BY <businesspartner_rba>-BusinessPartner.
-*      CALL FUNCTION 'BAPI_BUPA_GET_NUMBERS'
-*        EXPORTING
-*          businesspartner    = <businesspartner_rba>-BusinessPartner
-*        IMPORTING
-*          businesspartnerout = lt_businesspartner
-*        TABLES
-*          return             = lt_return.
-*
-*      map_bapi_messages(
-*        EXPORTING
-*          IT_Messages    = lt_return
-*        IMPORTING
-*          EV_FailedAdded = DATA(failed_added)
-*        CHANGING
-*          CT_Failed      = failed-z_i_businesspartner
-*          CT_Reported    = reported-z_i_businesspartner
-*      ).
-*      IF failed_added = abap_false.
-*        LOOP AT lt_businesspartner ASSIGNING FIELD-SYMBOL(<LFS_Address>).
-*          DATA: lv_address TYPE ad_addrnum.
-*          CLEAR: lv_address.
-*          lv_address = <LFS_Address>-addr_no.
-*          CALL FUNCTION 'BAPI_BUPA_ADDRESS_GETDETAIL'
-*            EXPORTING
-*              businesspartner = <businesspartner_rba>-BusinessPartner
-*              addressguid     = lv_address
-*            IMPORTING
-*              addressdata     = lt_address
-*            TABLES
-*              return          = lt_return.
-*
-*          map_message_assoc_to_address(
-*            EXPORTING
-*              IV_IsDependend = abap_true
-*              IT_Messages    = lt_return
-*            CHANGING
-*              CT_Failed      = failed-address
-*              CT_Reported    = reported-address
-*          ).
-*          LOOP AT lt_address ASSIGNING FIELD-SYMBOL(<address_data>).
-*            DATA: address  LIKE LINE OF result.
-*            INSERT
-*                VALUE #(
-*                    source-%tky = <businesspartner_rba>-BusinessPartner
-*                    target-%tky = VALUE #(
-*                                   BusinessPartner = <businesspartner_rba>-BusinessPartner
-*                                   Addrnumber = <LFS_Address>-addr_no
-*                     )
-*                     ) INTO TABLE association_links.
-*
-*            IF result_requested = abap_true.
-*              CLEAR: address.
-*              address-BusinessPartner = <businesspartner_rba>-BusinessPartner.
-*              address-Addrnumber     = <LFS_Address>-addr_no.
-*              address-Street         = <address_data>-street.
-*              address-City1          = <address_data>-city.
-*              address-PostCode1      = <address_data>-postl_cod1.
-*              address-Region         = <address_data>-region.
-*              address-Country        = <address_data>-country.
-*              address-HouseNum1     = <address_data>-house_no.
-*              address-PostCode2      = <address_data>-postl_cod2.
-*              address-Langu          = <address_data>-langu.
-*              INSERT address INTO TABLE result.
-*              .
-*            ENDIF.
-*          ENDLOOP.
-*        ENDLOOP.
-*      ENDIF.
-*    ENDLOOP.
-*
-*    SORT association_links BY target ASCENDING.
-*    DELETE ADJACENT DUPLICATES FROM association_links COMPARING ALL FIELDS.
-*
-*    SORT result BY %tky ASCENDING.
-*    DELETE ADJACENT DUPLICATES FROM result COMPARING ALL FIELDS.
+    DATA:
+      lv_businesspartner TYPE bu_partner,
+      lt_businesspartner TYPE TABLE OF bapibus1006_head,
+      lt_address         TYPE TABLE OF bapibus1006_address,
+
+      lt_return          TYPE bapiret2_t
+      .
+    LOOP AT keys_rba ASSIGNING FIELD-SYMBOL(<businesspartner_rba>) GROUP BY <businesspartner_rba>-BusinessPartner.
+      CALL FUNCTION 'BAPI_BUPA_GET_NUMBERS'
+        EXPORTING
+          businesspartner    = <businesspartner_rba>-BusinessPartner
+        IMPORTING
+          businesspartnerout = lt_businesspartner
+        TABLES
+          return             = lt_return.
+
+      map_bapi_messages(
+        EXPORTING
+          IT_Messages    = lt_return
+        IMPORTING
+          EV_FailedAdded = DATA(failed_added)
+        CHANGING
+          CT_Failed      = failed-z_i_businesspartner
+          CT_Reported    = reported-z_i_businesspartner
+      ).
+      IF failed_added = abap_false.
+        LOOP AT lt_businesspartner ASSIGNING FIELD-SYMBOL(<LFS_Address>).
+          DATA: lv_address TYPE ad_addrnum.
+          CLEAR: lv_address.
+          lv_address = <LFS_Address>-addr_no.
+          CALL FUNCTION 'BAPI_BUPA_ADDRESS_GETDETAIL'
+            EXPORTING
+              businesspartner = <businesspartner_rba>-BusinessPartner
+              addressguid     = lv_address
+            IMPORTING
+              addressdata     = lt_address
+            TABLES
+              return          = lt_return.
+
+          map_message_assoc_to_address(
+            EXPORTING
+              IV_IsDependend = abap_true
+              IT_Messages    = lt_return
+            CHANGING
+              CT_Failed      = failed-address
+              CT_Reported    = reported-address
+          ).
+          LOOP AT lt_address ASSIGNING FIELD-SYMBOL(<address_data>).
+            DATA: address  LIKE LINE OF result.
+            INSERT
+                VALUE #(
+                    source-%tky = <businesspartner_rba>-BusinessPartner
+                    target-%tky = VALUE #(
+                                   BusinessPartner = <businesspartner_rba>-BusinessPartner
+                                   Addrnumber = <LFS_Address>-addr_no
+                     )
+                     ) INTO TABLE association_links.
+
+            IF result_requested = abap_true.
+              CLEAR: address.
+              address-BusinessPartner = <businesspartner_rba>-BusinessPartner.
+              address-Addrnumber     = <LFS_Address>-addr_no.
+              address-Street         = <address_data>-street.
+              address-City1          = <address_data>-city.
+              address-PostCode1      = <address_data>-postl_cod1.
+              address-Region         = <address_data>-region.
+              address-Country        = <address_data>-country.
+              address-HouseNum1     = <address_data>-house_no.
+              address-PostCode2      = <address_data>-postl_cod2.
+              address-Langu          = <address_data>-langu.
+              INSERT address INTO TABLE result.
+              .
+            ENDIF.
+          ENDLOOP.
+        ENDLOOP.
+      ENDIF.
+    ENDLOOP.
+
+    SORT association_links BY target ASCENDING.
+    DELETE ADJACENT DUPLICATES FROM association_links COMPARING ALL FIELDS.
+
+    SORT result BY %tky ASCENDING.
+    DELETE ADJACENT DUPLICATES FROM result COMPARING ALL FIELDS.
 
   ENDMETHOD.
 
   METHOD rba_Roles.
-    LOOP AT keys_rba ASSIGNING FIELD-SYMBOL(<LFS_roles_rba>) GROUP BY <LFS_roles_rba>-BusinessPartner.
-      " Your code logic for Roles association read goes here
-    ENDLOOP.
   ENDMETHOD.
 
   METHOD cba_Address.
@@ -782,7 +779,7 @@ CLASS lhc_Z_I_BusinessPartner IMPLEMENTATION.
         WHEN OTHERS. " Invalid Category
           APPEND VALUE #(
                %cid        = ls_entity-%cid
-               %fail-cause = if_abap_behv=>cause-not_found
+               %fail-cause = if_abap_behv=>cause-unspecific
              ) TO failed-z_i_businesspartner.
           APPEND VALUE #(
             %cid = ls_entity-%cid
@@ -821,7 +818,7 @@ CLASS lhc_Z_I_BusinessPartner IMPLEMENTATION.
         IF lv_bpkind IS INITIAL.
           APPEND VALUE #(
             %cid        = ls_entity-%cid
-            %fail-cause = if_abap_behv=>cause-not_found
+            %fail-cause = if_abap_behv=>cause-unspecific
           ) TO failed-z_i_businesspartner.
           APPEND VALUE #(
             %cid = ls_entity-%cid
@@ -860,7 +857,7 @@ CLASS lhc_Z_I_BusinessPartner IMPLEMENTATION.
         IF lv_BU_GROUP IS INITIAL.
           APPEND VALUE #(
             %cid        = ls_entity-%cid
-            %fail-cause = if_abap_behv=>cause-not_found
+            %fail-cause = if_abap_behv=>cause-unspecific
           ) TO failed-z_i_businesspartner.
           APPEND VALUE #(
             %cid = ls_entity-%cid
@@ -914,7 +911,7 @@ CLASS lhc_Z_I_BusinessPartner IMPLEMENTATION.
           IF lv_role IS INITIAL.
             APPEND VALUE #(
                 %cid        = ls_role-%cid
-                %fail-cause = if_abap_behv=>cause-not_found
+                %fail-cause = if_abap_behv=>cause-unspecific
             ) TO failed-role.
             APPEND VALUE #(
                 %cid = ls_role-%cid
@@ -959,7 +956,7 @@ CLASS lhc_Z_I_BusinessPartner IMPLEMENTATION.
           IF lv_land1 IS INITIAL.
             APPEND VALUE #(
                 %cid        = ls_address-%cid
-                %fail-cause = if_abap_behv=>cause-not_found
+                %fail-cause = if_abap_behv=>cause-conflict
             ) TO failed-address.
             APPEND VALUE #(
                 %cid = ls_address-%cid
@@ -973,7 +970,21 @@ CLASS lhc_Z_I_BusinessPartner IMPLEMENTATION.
             ) TO reported-address.
           ENDIF.
         ENDIF.
-        IF ls_address-Region IS NOT INITIAL.
+        IF ls_address-Region IS INITIAL.
+            APPEND VALUE #(
+                %cid        = ls_address-%cid
+                %fail-cause = if_abap_behv=>cause-not_found
+            ) TO failed-address.
+            APPEND VALUE #(
+                %cid = ls_address-%cid
+                %msg = new_message(
+                         id       = gc_msgid
+                         number   = gc_msgnum_field_missing
+                         v1       = 'Region'
+                         severity = if_abap_behv_message=>severity-error )
+                %element-Region = if_abap_behv=>mk-on
+            ) TO reported-address.
+        ELSE.
           " Validate Region exists in T005s for the given Country
           SELECT bland
           FROM t005S
@@ -984,7 +995,7 @@ CLASS lhc_Z_I_BusinessPartner IMPLEMENTATION.
           IF lv_region IS INITIAL.
             APPEND VALUE #(
                 %cid        = ls_address-%cid
-                %fail-cause = if_abap_behv=>cause-not_found
+                %fail-cause = if_abap_behv=>cause-unspecific
             ) TO failed-address.
             APPEND VALUE #(
                 %cid = ls_address-%cid
