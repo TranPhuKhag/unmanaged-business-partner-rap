@@ -1,0 +1,6 @@
+@EndUserText.label: 'Service Definition for Business Partner'
+define service Z_SD_BUSINESSPARTNER {
+  expose Z_C_BusinessPartner as BusinessPartner;
+  expose Z_C_BP_Role as BusinessPartnerRole;
+  expose Z_C_BP_ADDRESS as Address;
+}
