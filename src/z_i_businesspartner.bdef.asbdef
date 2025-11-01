@@ -1,9 +1,7 @@
 unmanaged implementation in class ZBP_BHV_BUSINESSPARTNER unique;
 
-with draft;
 define behavior for Z_I_BusinessPartner
-draft table ZBP_D_BP
-lock master total etag LastChangedAt
+lock master
 etag master LastChangedAt
 {
   create(precheck);
@@ -15,7 +13,6 @@ etag master LastChangedAt
 }
 
 define behavior for Z_I_BP_ROLE alias Role
-draft table ZBP_D_BP_ROLE
 
 lock dependent by _BusinessPartner
 etag dependent by _BusinessPartner
@@ -31,7 +28,6 @@ etag dependent by _BusinessPartner
 
 define behavior for Z_I_BP_ADDRESS alias Address
 implementation in class ZBP_BHV_BP_ADDRESS unique
-draft table ZBP_D_BP_ADDRESS
 late numbering
 lock dependent by _BusinessPartner
 etag dependent by _BusinessPartner

@@ -1,5 +1,4 @@
 projection;
-use draft;
 define behavior for Z_C_BusinessPartner alias BusinessPartner
 use etag
 {
