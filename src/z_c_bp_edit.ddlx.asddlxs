@@ -19,4 +19,10 @@ annotate view Z_C_BusinessPartner with
             identification: [{ position: 10 }]
             }
   BusinessPartner;
+  @UI: {
+            lineItem: [{ position: 20, type: #STANDARD, qualifier: 'DefaultList' }],
+            selectionField: [{ position: 20 }],
+            identification: [{ position: 20 }]
+            }
+  businesspartnerfullname;
 }
