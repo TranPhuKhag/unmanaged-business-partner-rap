@@ -1,0 +1,27 @@
+projection;
+use draft;
+define behavior for Z_C_BusinessPartner alias BusinessPartner
+use etag
+{
+  use create;
+  use update;
+  use delete;
+
+  use association _Roles { create; }
+  use association _Address { create; }
+}
+
+define behavior for Z_C_BP_Role alias BusinessPartnerRole
+use etag
+{
+  use update;
+  use delete;
+  use association _BusinessPartner;
+}
+define behavior for Z_C_BP_ADDRESS alias BusinessPartnerAddress
+use etag
+{
+  use update;
+  use delete;
+  use association _BusinessPartner;
+}
